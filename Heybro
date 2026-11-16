@@ -1,0 +1,64 @@
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local UserInputService = game:GetService("UserInputService")
+
+-- ตั้งค่าตัวแปรสถานะและความเร็ว
+local autoClick = false
+local autoKey = false
+local clickDelay = 0.05 -- ความเร็วในการคลิก (วินาที)
+local keyDelay = 0.2    -- ความเร็วในการกดปุ่มคีย์บอร์ด (วินาที)
+local targetKey = Enum.KeyCode.E -- เปลี่ยนปุ่มสกิลตรงนี้ (เช่น E, Z, X, C, F)
+
+-- สร้าง ScreenGui หลัก
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+
+-- 1. ปุ่มลอยสำหรับเปิด-ปิดเมนูหลัก (ลากย้ายได้)
+local OpenCloseBtn = Instance.new("TextButton", ScreenGui)
+OpenCloseBtn.Size = UDim2.new(0, 110, 0, 35)
+OpenCloseBtn.Position = UDim2.new(0.05, 0, 0.1, 0)
+OpenCloseBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+OpenCloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+OpenCloseBtn.Text = "ซ่อนเมนู (UI)"
+OpenCloseBtn.TextSize = 14
+OpenCloseBtn.Active = true
+OpenCloseBtn.Draggable = true
+
+-- 2. หน้าต่างเมนูหลัก (MainFrame)
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0, 190, 0, 120)
+MainFrame.Position = UDim2.new(0.5, -95, 0.2, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true -- ลากย้ายกล่องเมนูได้
+
+-- หัวข้อเมนู + ปุ่ม X มุมขวาบน
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, -25, 0, 25)
+Title.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Text = "  Delta All-in-One Macro"
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextSize = 13
+
+local CloseXBtn = Instance.new("TextButton", MainFrame)
+CloseXBtn.Size = UDim2.new(0, 25, 0, 25)
+CloseXBtn.Position = UDim2.new(1, -25, 0, 0)
+CloseXBtn.BackgroundColor3 = Color3.fromRGB(180, 40, 40)
+CloseXBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseXBtn.Text = "X"
+CloseXBtn.TextSize = 14
+
+-- ปุ่ม 1: Auto-Click
+local ClickBtn = Instance.new("TextButton", MainFrame)
+ClickBtn.Size = UDim2.new(0.9, 0, 0, 36)
+ClickBtn.Position = UDim2.new(0.05, 0, 0, 33)
+ClickBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+ClickBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ClickBtn.Text = "Auto Click: OFF"
+ClickBtn.TextSize = 14
+
+-- ปุ่ม 2: Auto-Key
+local KeyBtn = Instance.new("TextButton", MainFrame)
+KeyBtn.Size = UDim2.new(0.9, 0, 0, 36)
+KeyBtn.Position = UDim2.new(0.05, 0, 0, 75)
+KeyBtn.BackgroundColor3 = Color3.fromRGB(200, 
